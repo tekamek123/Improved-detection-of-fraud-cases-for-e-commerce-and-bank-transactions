@@ -21,14 +21,42 @@ fraud-detection/
 ├── .vscode/              # VS Code settings
 ├── .github/              # GitHub workflows
 ├── data/                 # Data files (gitignored)
-│   ├── raw/             # Original datasets
-│   └── processed/       # Cleaned and feature-engineered data
+│   ├── raw/             # Original datasets (place your CSV files here)
+│   └── processed/       # Cleaned and feature-engineered data (generated)
 ├── notebooks/           # Jupyter notebooks for analysis
+│   ├── eda-fraud-data.ipynb
+│   ├── eda-creditcard.ipynb
+│   ├── feature-engineering.ipynb
+│   ├── modeling.ipynb
+│   └── shap-explainability.ipynb
 ├── src/                 # Source code modules
-├── tests/               # Unit tests
-├── models/              # Saved model artifacts
+│   ├── data_cleaning.py
+│   ├── feature_engineering.py
+│   └── preprocessing.py
+├── tests/               # Unit tests (see tests/README.md)
+│   └── __init__.py
+├── models/              # Saved model artifacts (see models/README.md)
+│   ├── best_model_*.pkl
+│   ├── *_model.pkl
+│   ├── scaler.pkl
+│   └── model_comparison_results.csv
+├── reports/             # Generated reports (see reports/README.md)
+│   └── interim_report_task1_*.pdf
 └── scripts/             # Utility scripts
+    ├── generate_interim_report.py
+    └── run_modeling_notebook.py
 ```
+
+### Directory Descriptions
+
+- **`data/raw/`**: Place your input datasets here (Fraud_Data.csv, creditcard.csv, IpAddress_to_Country.csv)
+- **`data/processed/`**: Generated processed datasets (created by feature-engineering notebook)
+- **`models/`**: Trained model artifacts and preprocessing objects (created by modeling notebook)
+- **`reports/`**: Generated PDF reports (created by report generation scripts)
+- **`tests/`**: Unit tests for source code modules
+- **`notebooks/`**: Jupyter notebooks for data analysis and modeling
+- **`src/`**: Reusable Python modules for data processing
+- **`scripts/`**: Utility scripts for report generation and automation
 
 ## Datasets
 
@@ -61,26 +89,126 @@ Bank transaction data with:
 
 ## Installation
 
-1. Clone the repository
-2. Create a virtual environment:
+### Prerequisites
+- Python 3.8 or higher
+- pip package manager
+
+### Setup Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd fraud-detection
+   ```
+
+2. **Create a virtual environment**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
-3. Install dependencies:
+   
+   **Activate the virtual environment:**
+   - On Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+
+3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
+4. **Verify installation**
+   ```bash
+   python -c "import pandas, numpy, sklearn, xgboost, lightgbm; print('All packages installed successfully!')"
+   ```
+
 ## Usage
 
-1. Place your datasets in `data/raw/` directory
-2. Run notebooks in order:
-   - `notebooks/eda-fraud-data.ipynb`: EDA for e-commerce data
-   - `notebooks/eda-creditcard.ipynb`: EDA for credit card data
-   - `notebooks/feature-engineering.ipynb`: Feature engineering
-   - `notebooks/modeling.ipynb`: Model training and evaluation
-   - `notebooks/shap-explainability.ipynb`: Model explainability analysis
+### Step 1: Prepare Data
+Place your datasets in the `data/raw/` directory:
+- `Fraud_Data.csv`: E-commerce transaction data
+- `IpAddress_to_Country.csv`: IP to country mapping
+- `creditcard.csv`: Bank credit card transaction data
+
+### Step 2: Run Analysis Pipeline
+
+Execute notebooks in the following order:
+
+1. **Exploratory Data Analysis**
+   ```bash
+   # Open in Jupyter
+   python -m jupyter notebook notebooks/eda-fraud-data.ipynb
+   python -m jupyter notebook notebooks/eda-creditcard.ipynb
+   ```
+   - Performs univariate and bivariate analysis
+   - Visualizes class distribution and feature relationships
+   - Generates insights for feature engineering
+
+2. **Feature Engineering**
+   ```bash
+   python -m jupyter notebook notebooks/feature-engineering.ipynb
+   ```
+   - Cleans and preprocesses data
+   - Engineers time-based and transaction frequency features
+   - Maps IP addresses to countries
+   - Applies SMOTE for class imbalance
+   - **Output**: Processed datasets saved to `data/processed/`
+
+3. **Model Training**
+   ```bash
+   python -m jupyter notebook notebooks/modeling.ipynb
+   ```
+   - Trains baseline (Logistic Regression) and ensemble models
+   - Performs hyperparameter tuning
+   - Runs cross-validation
+   - Compares and selects best model
+   - **Output**: Trained models saved to `models/`
+
+4. **Model Explainability**
+   ```bash
+   python -m jupyter notebook notebooks/shap-explainability.ipynb
+   ```
+   - Generates SHAP values for model interpretation
+   - Creates feature importance visualizations
+   - Provides individual prediction explanations
+
+### Step 3: Generate Reports
+
+Generate interim and final reports:
+```bash
+python scripts/generate_interim_report.py
+```
+**Output**: PDF reports saved to `reports/`
+
+## Output Locations
+
+### Models
+- **Location**: `models/` directory
+- **Contents**: 
+  - `best_model_*.pkl`: Selected best model for deployment
+  - `*_model.pkl`: All trained models (Logistic Regression, Random Forest, XGBoost, LightGBM)
+  - `scaler.pkl`, `label_encoders.pkl`: Preprocessing objects
+  - `model_comparison_results.csv`: Model performance comparison
+
+### Reports
+- **Location**: `reports/` directory
+- **Contents**:
+  - `interim_report_task1_*.pdf`: Task 1 analysis reports
+  - Future: Model comparison reports, final project report, SHAP explainability reports
+
+### Processed Data
+- **Location**: `data/processed/` directory
+- **Contents**:
+  - `X_train_processed.csv`, `y_train_processed.csv`: Training data
+  - `X_test_processed.csv`, `y_test_processed.csv`: Test data
+
+### Notebooks
+- **Location**: `notebooks/` directory
+- **Contents**: All analysis and modeling notebooks with executed outputs
 
 ## Evaluation Metrics
 
